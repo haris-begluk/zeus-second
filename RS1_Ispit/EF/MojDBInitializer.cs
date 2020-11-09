@@ -32,12 +32,9 @@ namespace RS1_Ispit_asp.net_core.EF
 
             for (int i = 1; i <= maxRazredi; i++)
             {
-             
                 predmeti.Add(new Predmet { Naziv = "Informtika", Razred = i });
                 predmeti.Add(new Predmet { Naziv = "Matematika", Razred = i });
                 predmeti.Add(new Predmet { Naziv = "Fizika", Razred = i });
-
-
             }
 
             skolskeGodine.Add(new SkolskaGodina { Aktuelna = false, Naziv = "2018/19" });
@@ -48,7 +45,6 @@ namespace RS1_Ispit_asp.net_core.EF
             skole.Add(new Skola() { Naziv = "II Srednja škola Mostar" });
             skole.Add(new Skola() { Naziv = "III Srednja škola Mostar" });
             skole.Add(new Skola() { Naziv = "IV Srednja škola Mostar" });
-
 
             int nBrojac = 0;
             foreach (Skola s in skole)
@@ -62,7 +58,6 @@ namespace RS1_Ispit_asp.net_core.EF
                         Prezime = MyRandomExtensions.MyRandomString(4),
                     });
                 }
-
 
                 foreach (SkolskaGodina skolskaGodina in skolskeGodine)
                 {
@@ -111,7 +106,6 @@ namespace RS1_Ispit_asp.net_core.EF
                                 {
                                     int zakljucnoKrajGodine = MyRandomExtensions.RandomOcjena();
 
-
                                     DodjeljenPredmet dp = new DodjeljenPredmet()
                                     {
                                         Predmet = p,
@@ -120,11 +114,8 @@ namespace RS1_Ispit_asp.net_core.EF
                                     };
                                     dodjeljenPredmet.Add(dp);
                                 }
-
                             }
-
                         }
-
                     }
                 }
             }
@@ -139,10 +130,47 @@ namespace RS1_Ispit_asp.net_core.EF
             context.Nastavnik.AddRange(nastavnici);
             context.DodjeljenPredmet.AddRange(dodjeljenPredmet);
             context.SaveChanges();
-        }
 
-       
+            //DODATI PODATKE ZA TAKMICENJA I TAKMICENJEUCESNIKE
+            var skoleC = context.Skola.ToList();
+            foreach (var item in skoleC)
+            {
+                var pred = context.Predmet;
+                var takmicenja = new List<Takmicenje>();
+                var takmicenjeUcesnik = new List<TakmicenjeUcesnik>();
+                for (int j = 0; j < pred.Count(); j++)
+                {
+                    var predmet = pred.ToList().MyRandom();
+                    takmicenja.Add(new Takmicenje
+                    {
+                        SkolaId = item.Id,
+                        PredmetId = predmet.Id,
+                        Datum = DateTime.Now,
+                        Razred = predmet.Razred,
+                        Zakljucaj = false
+                    });
+                }
+                context.Takmicenje.AddRange(takmicenja);
+                context.SaveChanges();
+
+                var odje = context.OdjeljenjeStavka.ToList();
+                var takm = context.Takmicenje.ToList();
+                for (int i = 0; i < 50; i++)
+                {
+                    takmicenjeUcesnik.Add(new TakmicenjeUcesnik
+                    {
+                        TakmicenjeId = takm.MyRandom().Id,
+                        OdjeljenjeStavkaId = odje.MyRandom().Id,
+                        Pristupio = new List<bool> { true, false }.MyRandom(),
+                        Bodovi = MyRandomExtensions.RandomBodova()
+                    });
+                }
+                context.TakmicenjeUcesnik.AddRange(takmicenjeUcesnik);
+                context.SaveChanges();
+            }
+        }
     }
+
     public static class MyRandomExtensions
     {
         public static string MyRandomString(int length)
@@ -151,7 +179,6 @@ namespace RS1_Ispit_asp.net_core.EF
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
-
 
         public static readonly Random random = new Random();
 
@@ -167,6 +194,14 @@ namespace RS1_Ispit_asp.net_core.EF
             if (x > 1)
                 x = x % 4 + 2;
             return x;
+        }
+
+        public static int? RandomBodova()
+        {
+            var bodovi = random.Next(1, 100);
+            if (bodovi < 20)
+                return null;
+            return bodovi;
         }
     }
 }
