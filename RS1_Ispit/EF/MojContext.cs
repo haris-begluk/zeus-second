@@ -22,6 +22,10 @@ namespace RS1_Ispit_asp.net_core.EF
 
             modelBuilder.Entity<PredajePredmet>().HasOne(x => x.Odjeljenje)
                 .WithMany().OnDelete(DeleteBehavior.Restrict);
+            //Avoids constraints errors on delete
+            modelBuilder.Entity<TakmicenjeUcesnik>().HasOne(x => x.Takmicenje)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+
 
         }
 
@@ -31,10 +35,13 @@ namespace RS1_Ispit_asp.net_core.EF
         public DbSet<Ucenik> Ucenik { get; set; }
         public DbSet<OdjeljenjeStavka> OdjeljenjeStavka { get; set; }
         public DbSet<Odjeljenje> Odjeljenje { get; set; }
-   
         public DbSet<Nastavnik> Nastavnik { get; set; }
         public DbSet<PredajePredmet> PredajePredmet { get; set; }
         public DbSet<Skola> Skola { get; set; }
-        public DbSet<SkolskaGodina> SkolskaGodina { get; set; }
+        public DbSet<SkolskaGodina> SkolskaGodina { get; set; } 
+        //New tables
+        public DbSet<Takmicenje> Takmicenje { get; set; }
+        public DbSet<TakmicenjeUcesnik> TakmicenjeUcesnik { get; set; }
+
     }
 }
