@@ -23,7 +23,8 @@
     </div>
 </div> 
 <div id="takmicenja"></div> 
-<button class="btn btn-primary">Dodaj</button>
+<button class="btn btn-primary" id="dodajBtn">Dodaj</button> 
+<div id="dodajform"></div>
 
 <script> 
     
@@ -34,5 +35,18 @@
 
             $("#takmicenja").html(result);
         }
+    }); 
+
+
+    $("#dodajBtn").click(function () {
+        var skolaId = $("#SkolaId").find(":selected").val();
+        $.ajax({
+            url: "/Takmicenje/DodajTakmicenje?skolaId=" + skolaId,
+            type: "GET",
+            success: function (res) {
+                $("#dodajform").html(res);
+            }
+        });
     });
-</script>
+</script> 
+

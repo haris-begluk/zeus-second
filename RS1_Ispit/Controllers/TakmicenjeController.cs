@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RS1_Ispit_asp.net_core.EF;
+using RS1_Ispit_asp.net_core.EntityModels;
 using RS1_Ispit_asp.net_core.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -61,5 +63,59 @@ namespace RS1_Ispit_asp.net_core.Controllers
 
             return PartialView("TakmicenjaPartial", model);
         }
+
+        [HttpGet]
+        public ActionResult DodajTakmicenje(int skolaId)
+        {
+            var predmeti = _context.Predmet.ToList();
+            var model  = new DodajTakmicenjeVM{ 
+            Skole = _context.Skola.ToList(), 
+            SkolaId = skolaId, 
+            Predmeti = predmeti, 
+            PredmetId = predmeti.FirstOrDefault().Id, 
+            Datum = DateTime.Now
+            };
+            return PartialView("DodajTakmicenjePartial", model);
+        }
+
+        [HttpPost]
+        public IActionResult DodajTakmicenje(DodajTakmicenjeVM obj)
+        {
+            var predmeti = _context.Predmet.ToList();
+            var model = new Takmicenje
+            {
+                SkolaId = obj.SkolaId,
+                PredmetId = obj.PredmetId,
+                Datum = DateTime.Now,
+                Zakljucaj = false, 
+            };
+            var result = _context.Takmicenje.Add(model);
+            var relacije = _context.DodjeljenPredmet
+                .Where(dp => dp.ZakljucnoKrajGodine.Equals(5) && dp.OdjeljenjeStavka.Odjeljenje.SkolaID.Equals(result.Entity.SkolaId) && dp.PredmetId.Equals(result.Entity.PredmetId))
+                .Select(s => new { s.OdjeljenjeStavkaId, s.OdjeljenjeStavka.UcenikId });
+            foreach (var item in relacije)
+            { 
+                if(UcenikProsjek(item.UcenikId))
+                {
+                    _context.TakmicenjeUcesnik.Add(new TakmicenjeUcesnik { 
+                    TakmicenjeId = result.Entity.Id, 
+                    OdjeljenjeStavkaId = item.OdjeljenjeStavkaId, 
+                    Pristupio = true, 
+                    Bodovi = 0
+                    });
+                }
+
+            }
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index), "Takmicenje");
+
+        }
+        private bool UcenikProsjek(int ucenikId)
+        {
+            var prosjek = _context.DodjeljenPredmet.Where(dp => dp.OdjeljenjeStavka.UcenikId.Equals(ucenikId)).Average(a => a.ZakljucnoKrajGodine);
+            if (prosjek >= 4) return true; return false;
+        }
+
     }
 }
