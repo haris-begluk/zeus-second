@@ -185,8 +185,6 @@ namespace RS1_Ispit_asp.net_core.Migrations
 
                     b.Property<int>("PredmetId");
 
-                    b.Property<int>("Razred");
-
                     b.Property<int>("SkolaId");
 
                     b.Property<bool>("Zakljucaj");

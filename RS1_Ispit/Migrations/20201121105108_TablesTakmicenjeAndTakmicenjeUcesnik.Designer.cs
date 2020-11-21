@@ -10,7 +10,7 @@ using RS1_Ispit_asp.net_core.EF;
 namespace RS1_Ispit_asp.net_core.Migrations
 {
     [DbContext(typeof(MojContext))]
-    [Migration("20201109215745_TablesTakmicenjeAndTakmicenjeUcesnik")]
+    [Migration("20201121105108_TablesTakmicenjeAndTakmicenjeUcesnik")]
     partial class TablesTakmicenjeAndTakmicenjeUcesnik
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -186,8 +186,6 @@ namespace RS1_Ispit_asp.net_core.Migrations
                     b.Property<DateTime>("Datum");
 
                     b.Property<int>("PredmetId");
-
-                    b.Property<int>("Razred");
 
                     b.Property<int>("SkolaId");
 

@@ -1,0 +1,38 @@
+﻿@model RS1_Ispit_asp.net_core.ViewModels.IndexVM
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Takmicnja</h1>
+<div class="row">
+    <div class="col-md-4 col-sm-4">
+        <form ajax-poziv="da" action="/Takmicenje/Takmicenja" ajax-rezultat="takmicenja">
+            <div class="form-group">
+                <label asp-for="@Model.SkolaId" class="control-label">Skola</label>
+                <select asp-for="@Model.SkolaId" asp-items="@Model.Skole.Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Naziv})" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.RazredId" class="control-label">Razred</label>
+                <select asp-for="@Model.RazredId" asp-items="@Model.Razredi.Select(s => new SelectListItem { Value = s.ToString(), Text = s.ToString()})" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Prikazi" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div> 
+<div id="takmicenja"></div> 
+<button class="btn btn-primary">Dodaj</button>
+
+<script> 
+    
+    $.ajax({
+        url: "/Takmicenje/Takmicenja?skolaId=" + $("#SkolaId").find(":selected").val() + "&razredId=" + $("#RazredId").find(":selected").val(), 
+        type: "GET",
+        success: function (result) {
+
+            $("#takmicenja").html(result);
+        }
+    });
+</script>

@@ -146,7 +146,6 @@ namespace RS1_Ispit_asp.net_core.EF
                         SkolaId = item.Id,
                         PredmetId = predmet.Id,
                         Datum = DateTime.Now,
-                        Razred = predmet.Razred,
                         Zakljucaj = false
                     });
                 }

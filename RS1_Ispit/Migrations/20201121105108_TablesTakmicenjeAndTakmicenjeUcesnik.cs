@@ -17,7 +17,6 @@ namespace RS1_Ispit_asp.net_core.Migrations
                     SkolaId = table.Column<int>(nullable: false),
                     PredmetId = table.Column<int>(nullable: false),
                     Datum = table.Column<DateTime>(nullable: false),
-                    Razred = table.Column<int>(nullable: false),
                     Zakljucaj = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
