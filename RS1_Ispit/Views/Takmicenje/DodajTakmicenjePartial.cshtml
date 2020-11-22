@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="col-md-4 col-sm-4">
-        <form asp-action="DodajTakmicenje" >
+        <form asp-action="DodajTakmicenje">
             <div class="form-group">
                 <label asp-for="PredmetId" class="control-label">Predmet</label>
                 <select asp-for="@Model.PredmetId" asp-items="@Model.Predmeti.Select(s => new SelectListItem { Value = s.Id.ToString(), Text = s.Naziv + " " + s.Razred})" class="form-control"></select>
@@ -14,10 +14,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="Datum" class="control-label"></label>
-                <input asp-for="@Model.Datum" asp-format="{0:dd.MM.yyyy}"  class="form-control" readonly/>
+                <input asp-for="@Model.Datum" asp-format="{0:dd.MM.yyyy}" class="form-control" readonly />
             </div>
             <div class="form-group">
-                <input type="submit" id="snimiBtn" value="Snimi" class="btn btn-primary" />
+                <input type="submit" value="Snimi" class="btn btn-primary" />
             </div>
         </form>
     </div>

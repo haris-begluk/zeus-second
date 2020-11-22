@@ -1,0 +1,85 @@
+﻿@model RS1_Ispit_asp.net_core.ViewModels.RezultatiTakmicenjaVM
+
+@{
+    ViewData["Title"] = "Rezultati";
+}
+<div class="row">
+    <h1>Rezultati Takmicenja</h1>
+
+    <div class="col-md-4 col-sm-4">
+        <div class="form-group">
+            <label>Skola</label>
+            <input value="@Model.Skola" class="form-control" style="font-weight:bold;" readonly />
+        </div>
+        <div class="form-group">
+            <label>Predmet</label>
+            <input value="@Model.Predmet" class="form-control" style="font-weight:bold;" readonly />
+        </div>
+        <div class="form-group">
+            <label>Razred</label>
+            <input value="@Model.Razred" class="form-control" style="font-weight:bold;" readonly />
+        </div>
+        <div class="form-group">
+            <label>Datum</label>
+            <input value="@Model.Datum.ToString("dd.MM.yyyy")" style="font-weight:bold;" class="form-control" readonly />
+        </div>
+        <div class="form-group">
+            <button class="btn @(Model.Zakljucaj? "btn-primary":"btn-danger")" ajax-poziv="da" ajax-url="/Takmicenje/Zakljucaj?id=@Model.TakmicenjeId" ajax-rezultat="none">@(Model.Zakljucaj? "Otkljucaj":"Zakljucaj")</button>
+        </div>
+    </div>
+    @if (!Model.Zakljucaj)
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Odjeljenje
+                    </th>
+                    <th>
+                        Broj u dnevniku
+                    </th>
+                    <th>
+                        Pristupio
+                    </th>
+                    <th>
+                        Rezultat bodovi (max 100)
+                    </th>
+                    <th>
+                        Akcija
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Ucesnici)
+                {
+                    <tr>
+                        <td>
+                            @item.Odjeljenje
+                        </td>
+                        <td>
+                            @item.BrojUDnevniku
+                        </td>
+                        <td>
+                            <a ajax-poziv='da' href="/Takmicenje/Pristupio?id=@item.UcesnikId" style="text-decoration:none; color:white;  @(item.Pristupio?"background-color:green;":"background-color:red;")">@(item.Pristupio?"DA":"NE")</a>
+                        </td>
+                        <td>
+                            @(item.MaxBodovi != null? item.MaxBodovi.ToString(): "X")
+                        </td>
+                        <td>
+                            @if (item.Pristupio)
+                            {
+                                <a ajax-poziv='da' href="/Takmicenje/EditUcesnika?id=@item.UcesnikId&bodovi=@item.MaxBodovi" ajax-rezultat="editUcesnika" style="text-decoration:none; font-weight:bold">Uredi</a>
+
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button ajax-poziv='da' ajax-url="/Takmicenje/DodajUcesnika?id=@Model.TakmicenjeId" ajax-rezultat="editUcesnika" class="btn btn-primary">Dodaj Ucesnika</button>
+
+        <div id="editUcesnika"></div>
+    }
+</div>
