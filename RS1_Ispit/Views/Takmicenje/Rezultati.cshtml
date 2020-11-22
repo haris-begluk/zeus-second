@@ -24,7 +24,7 @@
             <input value="@Model.Datum.ToString("dd.MM.yyyy")" style="font-weight:bold;" class="form-control" readonly />
         </div>
         <div class="form-group">
-            <button class="btn @(Model.Zakljucaj? "btn-primary":"btn-danger")" ajax-poziv="da" ajax-url="/Takmicenje/Zakljucaj?id=@Model.TakmicenjeId" ajax-rezultat="none">@(Model.Zakljucaj? "Otkljucaj":"Zakljucaj")</button>
+            <button id="zakljucaj" class="btn @(Model.Zakljucaj? "btn-primary":"btn-danger")" ajax-poziv="da" ajax-url="/Takmicenje/Zakljucaj?id=@Model.TakmicenjeId" ajax-rezultat="none">@(Model.Zakljucaj? "Otkljucaj":"Zakljucaj")</button>
         </div>
     </div>
     @if (!Model.Zakljucaj)
@@ -47,7 +47,6 @@
                     <th>
                         Akcija
                     </th>
-
                 </tr>
             </thead>
             <tbody>
@@ -61,10 +60,16 @@
                             @item.BrojUDnevniku
                         </td>
                         <td>
-                            <a ajax-poziv='da' href="/Takmicenje/Pristupio?id=@item.UcesnikId" style="text-decoration:none; color:white;  @(item.Pristupio?"background-color:green;":"background-color:red;")">@(item.Pristupio?"DA":"NE")</a>
+                            <a class="pristupio" ajax-poziv='da' href="/Takmicenje/Pristupio?id=@item.UcesnikId" style="text-decoration:none; color:white;  @(item.Pristupio?"background-color:green;":"background-color:red;")">@(item.Pristupio?"DA":"NE")</a>
                         </td>
                         <td>
-                            @(item.MaxBodovi != null? item.MaxBodovi.ToString(): "X")
+                            @if (item.MaxBodovi != null && item.Pristupio)
+                            {
+                                <input type="number" class="bodovi" id="@item.UcesnikId" value="@item.MaxBodovi" min="0" max="100" />
+
+                            }
+                            else
+                            { <span>X</span>}
                         </td>
                         <td>
                             @if (item.Pristupio)
@@ -73,7 +78,6 @@
 
                             }
                         </td>
-
                     </tr>
                 }
             </tbody>
@@ -81,5 +85,36 @@
         <button ajax-poziv='da' ajax-url="/Takmicenje/DodajUcesnika?id=@Model.TakmicenjeId" ajax-rezultat="editUcesnika" class="btn btn-primary">Dodaj Ucesnika</button>
 
         <div id="editUcesnika"></div>
+
+        <script>
+            $(".pristupio").mouseup(function () {
+                setTimeout(function () {
+                    window.location.reload();
+                }, 500);
+            });
+
+            $(".bodovi").keyup(function (event) {
+                setTimeout(function () {
+                    if (event.target.value <= 100 && event.target.value >= 0) {
+                        $.ajax({
+                            type: "GET",
+                            url: "/Takmicenje/EditBodovi?id=" + event.target.id + "&bodovi=" + event.target.value,
+                            success: function () {
+                                window.location.reload();
+                            }
+
+                        });
+                    }
+
+                }, 1000);
+            });
+        </script>
     }
 </div>
+<script>
+    $("#zakljucaj").mouseup(function () {
+        setTimeout(function () {
+            window.location.reload();
+        }, 1000);
+    });
+</script>

@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="col-md-4 col-sm-4">
-        <form ajax-poziv="da" action="/Takmicenje/EditUcesnika" ajax-rezultat="takmicenja"> 
+        <form ajax-poziv="da" action="/Takmicenje/EditUcesnika" ajax-rezultat="takmicenja">
             <input asp-for="@Model.TakmicenjeId" hidden />
             <div class="form-group">
                 <label asp-for="@Model.UcesnikId" class="control-label">Ucesnik</label>
@@ -16,7 +16,7 @@
                 <span asp-validation-for="Bodovi" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Snimi" class="btn btn-primary" />
+                <input id="uredi" type="submit" value="Snimi" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -24,3 +24,10 @@
 
 
 
+<script>
+    $("#uredi").mouseup(function () {
+        setTimeout(function () {
+            window.location.reload();
+        }, 1000);
+    });
+</script>

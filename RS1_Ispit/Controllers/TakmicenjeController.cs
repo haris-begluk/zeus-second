@@ -151,6 +151,12 @@ namespace RS1_Ispit_asp.net_core.Controllers
             _context.SaveChanges();
         }
 
+        public void EditBodovi(int id, int bodovi)
+        {
+            _context.TakmicenjeUcesnik.FirstOrDefault(t => t.Id.Equals(id)).Bodovi = bodovi;
+            _context.SaveChanges();
+        }
+
         public IActionResult DodajUcesnika(int id)
         {
             var ucesnici = _context.TakmicenjeUcesnik;
